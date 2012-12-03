@@ -95,13 +95,13 @@
 #define CONFIG_INITRD_TAG
 #define CONFIG_CMDLINE_EDITING
 
-#if 0
+#if 1
 /* mmc config */
 #define CONFIG_MMC
 #define CONFIG_GENERIC_MMC
 #define CONFIG_CMD_MMC
 #define CONFIG_MMC_SUNXI
-#define CONFIG_MMC_SUNXI_SLOT			2		/* which mmc slot to use, could be 0,1,2,3 */
+#define CONFIG_MMC_SUNXI_SLOT			0		/* which mmc slot to use, could be 0,1,2,3 */
 
 #define CONFIG_DOS_PARTITION
 #endif
@@ -112,7 +112,7 @@
  */
 #define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (1 << 20))
 
-#define CONFIG_FASTBOOT
+// #define CONFIG_FASTBOOT
 #define CONFIG_STORAGE_NAND
 #define FASTBOOT_TRANSFER_BUFFER		0x41000000
 #define FASTBOOT_TRANSFER_BUFFER_SIZE	256 << 20 /* 256M */
@@ -159,8 +159,9 @@
 #define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* 256 KiB */
 #define CONFIG_IDENT_STRING			" Allwinner Technology "
 
-#define CONFIG_ENV_IS_IN_NAND_SUNXI	    /* we store env in one partition of our nand */
-#define CONFIG_SUNXI_ENV_PARTITION		"env"	/* the partition name */
+// #define CONFIG_ENV_IS_IN_NAND_SUNXI	    /* we store env in one partition of our nand */
+// #define CONFIG_SUNXI_ENV_PARTITION		"env"	/* the partition name */
+#define CONFIG_ENV_IS_NOWHERE 1
 
 /*------------------------------------------------------------------------
  * we save the environment in a nand partition, the partition name is defined
@@ -173,20 +174,21 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"bootdelay=3\0" \
-	"bootcmd=run setargs boot_normal\0" \
+	"bootcmd=run getargs setargs boot_normal\0" \
 	"console=ttyS0,115200\0" \
-	"nand_root=/dev/nandd\0" \
+	"nand_root=/dev/nandb\0" \
 	"mmc_root=/dev/mmcblk0p4\0" \
 	"init=/init\0" \
 	"loglevel=8\0" \
-	"setargs=setenv bootargs console=${console} root=${nand_root}" \
+	"setargs=setenv bootargs console=${console} root=${nand_root} " \
 	"init=${init} loglevel=${loglevel}\0" \
-	"boot_normal=nand read 50000000 boot; boota 50000000\0" \
-	"boot_recovery=nand read 50000000 recovery; boota 50000000\0" \
+	"getargs=mw 41000000 0 10000; fatload nand 0 41000000 linux/env.txt; env import 41000000 10000\0" \
+	"boot_normal=fatload nand 0 42000000 linux/uImage; bootm 42000000\0" \
+	"boot_recovery=fatload nand 0 42000000 linux/uImage; bootm 42000000\0" \
 	"boot_fastboot=fastboot\0"
 
-#define CONFIG_BOOTDELAY	1
-#define CONFIG_BOOTCOMMAND	"nand read 50000000 boot;boota 50000000"
+#define CONFIG_BOOTDELAY	3
+#define CONFIG_BOOTCOMMAND	"fatload nand 0 42000000 linux/uImage; bootm 42000000"
 #define CONFIG_SYS_BOOT_GET_CMDLINE
 #define CONFIG_AUTO_COMPLETE
 
