@@ -1,0 +1,9 @@
+ext4_common.h:58:21:zalloc	16	static
+ext4_common.c:1471:5:ext4fs_read_inode	72	static
+ext4_common.c:1500:10:read_allocated_block	48	static
+ext4_common.c:1841:6:ext4fs_close	8	static
+ext4_common.c:1871:5:ext4fs_iterate_dir	72	dynamic
+ext4_common.c:2030:12:ext4fs_find_file1	64	dynamic
+ext4_common.c:2130:5:ext4fs_find_file	16	static
+ext4_common.c:2154:5:ext4fs_open	16	static
+ext4_common.c:2185:5:ext4fs_mount	16	static
