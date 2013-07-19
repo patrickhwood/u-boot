@@ -46,6 +46,7 @@
 
 /include/generated/
 /lib/asm-offsets.s
+libnand
 
 # stgit generated dirs
 patches-*
