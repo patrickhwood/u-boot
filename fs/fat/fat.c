@@ -101,6 +101,7 @@ int fat_register_device (block_dev_desc_t * dev_desc, int part_no)
      defined(CONFIG_CMD_SATA) || \
      defined(CONFIG_CMD_SCSI) || \
      defined(CONFIG_CMD_USB) || \
+     defined(CONFIG_CMD_NAND) || \
      defined(CONFIG_MMC) || \
      defined(CONFIG_SYSTEMACE) )
 	/* First we assume there is a MBR */

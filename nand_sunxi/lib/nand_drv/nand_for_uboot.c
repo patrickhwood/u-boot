@@ -134,7 +134,7 @@ int nand_erase_uboot(char *dev_part)
 int nand_init_uboot(int verbose)
 {
 	nand_blk_dev.if_type = IF_TYPE_NAND;
-	nand_blk_dev.part_type = PART_TYPE_DOS;
+	nand_blk_dev.part_type = PART_TYPE_NAND;
 	nand_blk_dev.dev = 0;
 	nand_blk_dev.lun = 0;
 	nand_blk_dev.type = 0;

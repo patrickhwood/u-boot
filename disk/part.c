@@ -39,6 +39,7 @@
      defined(CONFIG_CMD_SATA) || \
      defined(CONFIG_CMD_SCSI) || \
      defined(CONFIG_CMD_USB) || \
+     defined(CONFIG_CMD_NAND) || \
      defined(CONFIG_MMC) || \
      defined(CONFIG_SYSTEMACE) ) || \
      defined(CONFIG_CMD_FAT)
@@ -70,7 +71,7 @@ static const struct block_drvr block_drvr[] = {
 #if defined(CONFIG_CMD_MG_DISK)
 	{ .name = "mgd", .get_dev = mg_disk_get_dev, },
 #endif
-#if defined(CONFIG_CMD_FAT)
+#if defined(CONFIG_CMD_NAND)
 	{ .name = "nand", .get_dev = nand_get_dev, },
 #endif
 	{ },
@@ -177,6 +178,9 @@ void dev_print (block_dev_desc_t *dev_desc)
 	case IF_TYPE_DOC:
 		puts("device type DOC\n");
 		return;
+	case IF_TYPE_NAND:
+		puts("device type NAND\n");
+		break;
 	case IF_TYPE_UNKNOWN:
 		puts("device type unknown\n");
 		return;
@@ -249,6 +253,7 @@ void dev_print (block_dev_desc_t *dev_desc)
      defined(CONFIG_CMD_SATA) || \
      defined(CONFIG_CMD_SCSI) || \
      defined(CONFIG_CMD_USB) || \
+     defined(CONFIG_NAND_USB) || \
      defined(CONFIG_MMC)		|| \
      defined(CONFIG_SYSTEMACE) )
 
@@ -256,6 +261,7 @@ void dev_print (block_dev_desc_t *dev_desc)
     defined(CONFIG_DOS_PARTITION) || \
     defined(CONFIG_ISO_PARTITION) || \
     defined(CONFIG_AMIGA_PARTITION) || \
+    defined(CONFIG_NAND_PARTITION) || \
     defined(CONFIG_EFI_PARTITION)
 
 void init_part (block_dev_desc_t * dev_desc)
@@ -292,6 +298,13 @@ void init_part (block_dev_desc_t * dev_desc)
 #ifdef CONFIG_AMIGA_PARTITION
 	if (test_part_amiga(dev_desc) == 0) {
 	    dev_desc->part_type = PART_TYPE_AMIGA;
+	    return;
+	}
+#endif
+
+#ifdef CONFIG_NAND_PARTITION
+	if (test_part_nand(dev_desc) == 0) {
+	    dev_desc->part_type = PART_TYPE_NAND;
 	    return;
 	}
 #endif
@@ -347,7 +360,17 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 		}
 		break;
 #endif
+
+#ifdef CONFIG_NAND_PARTITION
+	case PART_TYPE_NAND:
+		if (get_partition_info_nand(dev_desc,part,info) == 0) {
+			PRINTF ("## Valid NAND partition found ##\n");
+			return (0);
+		}
+		break;
+#endif
 	default:
+		PRINTF ("## unknown partition type: %d ##\n", dev_desc->part_type);
 		break;
 	}
 	return (-1);
@@ -377,6 +400,9 @@ static void print_part_header (const char *type, block_dev_desc_t * dev_desc)
 		break;
 	case IF_TYPE_MMC:
 		puts ("MMC");
+		break;
+	case IF_TYPE_NAND:
+		puts ("NAND");
 		break;
 	default:
 		puts ("UNKNOWN");
@@ -426,6 +452,14 @@ void print_part (block_dev_desc_t * dev_desc)
 		PRINTF ("## Testing for valid EFI partition ##\n");
 		print_part_header ("EFI", dev_desc);
 		print_part_efi (dev_desc);
+		return;
+#endif
+
+#ifdef CONFIG_NAND_PARTITION
+	case PART_TYPE_NAND:
+		PRINTF ("## Testing for valid NAND partition ##\n");
+		print_part_header ("NAND", dev_desc);
+		print_part_nand (dev_desc);
 		return;
 #endif
 	}

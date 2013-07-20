@@ -74,6 +74,7 @@ typedef struct block_dev_desc {
 #define PART_TYPE_ISO		0x03
 #define PART_TYPE_AMIGA		0x04
 #define PART_TYPE_EFI		0x05
+#define PART_TYPE_NAND		0x06
 
 /*
  * Type string for U-Boot bootable partitions
@@ -108,6 +109,7 @@ block_dev_desc_t* systemace_get_dev(int dev);
 block_dev_desc_t* mg_disk_get_dev(int dev);
 
 block_dev_desc_t* nand_get_dev(int dev);
+int nand_get_info(int dev, disk_partition_t *info);
 
 
 /* disk/part.c */
@@ -165,6 +167,13 @@ int   test_part_amiga (block_dev_desc_t *dev_desc);
 int get_partition_info_efi (block_dev_desc_t * dev_desc, int part, disk_partition_t *info);
 void print_part_efi (block_dev_desc_t *dev_desc);
 int   test_part_efi (block_dev_desc_t *dev_desc);
+#endif
+
+#ifdef CONFIG_NAND_PARTITION
+/* disk/part_nand.c */
+int get_partition_info_nand (block_dev_desc_t * dev_desc, int part, disk_partition_t *info);
+void print_part_nand (block_dev_desc_t *dev_desc);
+int   test_part_nand (block_dev_desc_t *dev_desc);
 #endif
 
 #endif /* _PART_H */
