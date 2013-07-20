@@ -1,2 +1,0 @@
-dev.c:49:6:ext4fs_set_blk_dev	8	static
-dev.c:57:5:ext4fs_devread	1184	static

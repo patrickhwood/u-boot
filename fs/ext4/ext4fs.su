@@ -1,5 +1,0 @@
-ext4fs.c:48:24:get_fs	0	static
-ext4fs.c:53:6:ext4fs_free_node	0	static
-ext4fs.c:64:5:ext4fs_read_file	88	static
-ext4fs.c:170:5:ext4fs_ls	16	static
-ext4fs.c:191:5:ext4fs_read	0	static
