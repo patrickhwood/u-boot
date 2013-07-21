@@ -249,7 +249,7 @@ int board_init(void) {
 int board_late_init(void)
 {
 	fastboot_partition_init();
-	set_boot_type_arg();
+	// set_boot_type_arg();
 	check_android_misc();
 	return 0;
 }

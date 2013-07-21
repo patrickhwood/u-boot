@@ -105,7 +105,7 @@
 #define CONFIG_GENERIC_MMC
 #define CONFIG_CMD_MMC
 #define CONFIG_MMC_SUNXI
-#define CONFIG_MMC_SUNXI_SLOT		2		/* which mmc slot to use, could be 0,1,2,3 */
+#define CONFIG_MMC_SUNXI_SLOT		0		/* which mmc slot to use, could be 0,1,2,3 */
 #define CONFIG_MMC_SUNXI_USE_DMA
 #if 0
 /* Set in boards.cfg */
@@ -190,26 +190,43 @@
 #define CONFIG_ENV_SIZE				(128 << 10)	/* 128KB */
 #define CONFIG_CMD_SAVEENV
 
-#define CONFIG_EXTRA_ENV_SETTINGS \
-	"bootdelay=1\0" \
-	"bootcmd=run setargs_nand boot_normal\0" \
-	"console=ttyS0,115200\0" \
-	"nand_root=/dev/system\0" \
-	"mmc_root=/dev/mmcblk0p7\0" \
-	"init=/init\0" \
-	"loglevel=8\0" \
-    "setargs_nand=mw 41000000 0 10000; fatload nand 0 41000000 uEnv.txt; env import 41000000 10000;" \
-	" fatload nand 0 0x43000000 script.bin;" \
-	" setenv bootargs console=${console} root=${root} loglevel=${loglevel} ${extraargs}\0" \
-	"setargs_mmc=setenv bootargs console=${console} root=${mmc_root}" \
-	" init=${init} loglevel=${loglevel} partitions=${partitions}\0" \
-    "boot_normal=fatload nand 0 42000000 ${kernel}; bootm 42000000\0" \
-	"boot_recovery=sunxi_flash read 40007800 recovery;boota 40007800\0" \
-	"boot_fastboot=fastboot\0"
+#define CONFIG_BOOTCOMMAND \
+	"if run loadbootenv; then " \
+		"echo Loaded environment from ${bootenv};" \
+		"env import -t ${scriptaddr} ${filesize};" \
+	"fi;" \
+	"if test -n ${uenvcmd}; then " \
+		"echo Running uenvcmd ...;" \
+		"run uenvcmd;" \
+	"fi;" \
+	"if run loadbootscr; then "\
+		"echo Jumping to ${bootscr};" \
+		"source ${scriptaddr};" \
+	"fi;" \
+	"run setargs loadscript loadkernel; watchdog 0; bootm $kerneladdr;"
 
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"console=ttyS0,115200\0" \
+	"root=/dev/nand3 rootwait\0" \
+	"panicarg=panic=10\0" \
+	"extraargs=\0" \
+	"loglevel=8\0" \
+	"scriptaddr=0x44000000\0" \
+	"envaddr=0x43000000\0" \
+	"kerneladdr=0x48000000\0" \
+	"setargs=setenv bootargs console=${console} root=${root}" \
+	" loglevel=${loglevel} ${panicarg} ${extraargs}\0" \
+	"kernel=uImage\0" \
+	"bootenv=uEnv.txt\0" \
+	"bootscr=boot.scr\0" \
+	"script=script.bin\0" \
+	"ext4bootpart=3\0" \
+	"loadbootscr=fatload nand 0 $scriptaddr $bootscr || ext4load nand 0:$ext4bootpart $scriptaddr $bootscr || ext4load nand 0:$ext4bootpart $scriptaddr boot/$bootscr\0" \
+	"loadbootenv=fatload nand 0 $scriptaddr $bootenv || ext4load nand 0:$ext4bootpart $scriptaddr $bootenv || ext4load nand 0:$ext4bootpart $scriptaddr boot/$bootenv\0" \
+	"loadscript=fatload nand 0 $envaddr $script || ext4load nand 0:$ext4bootpart $envaddr $script || ext4load nand 0:$ext4bootpart $envaddr boot/$script\0" \
+	"loadkernel=fatload nand 0 $kerneladdr $kernel || ext4load nand 0:$ext4bootpart $kerneladdr $kernel || ext4load nand 0:$ext4bootpart $kerneladdr boot/$kernel\0"
 
 #define CONFIG_BOOTDELAY	1
-#define CONFIG_BOOTCOMMAND	"nand read 50000000 boot;boota 50000000"
 #define CONFIG_SYS_BOOT_GET_CMDLINE
 #define CONFIG_AUTO_COMPLETE
 
