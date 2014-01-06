@@ -27,6 +27,7 @@
 
 obj-y	+= board.o
 obj-$(CONFIG_A10_MID_1GB)	+= dram_sun4i_360_1024_iow16.o
+obj-$(CONFIG_A10_OLINUXINO_L)	+= dram_a10_olinuxino_l.o
 obj-$(CONFIG_A10S_OLINUXINO_M)	+= dram_a10s_olinuxino_m.o
 obj-$(CONFIG_A13_OLINUXINO)	+= dram_a13_olinuxino.o
 obj-$(CONFIG_A13_OLINUXINOM)	+= dram_a13_oli_micro.o
@@ -53,7 +54,10 @@ obj-$(CONFIG_GOOSEBERRY_A721)	+= dram_gooseberry_a721.o
 obj-$(CONFIG_H6)		+= dram_h6.o
 obj-$(CONFIG_HACKBERRY)	+= dram_hackberry.o
 obj-$(CONFIG_A7HD)		+= dram_sun4i_360_1024_iow8.o
+obj-$(CONFIG_INTERRA3)		+= dram_mk802ii_a20.o
 obj-$(CONFIG_INET97F_II)	+= dram_sun4i_408_512.o
+obj-$(CONFIG_INET_K70HC)	+= dram_inet_k70hc.o
+obj-$(CONFIG_JESURUN_Q5)	+= dram_sun4i_312_1024_iow8.o
 obj-$(CONFIG_K1001L1C)	+= dram_a20_olinuxino_m.o
 obj-$(CONFIG_MEFAFEIS_A08)	+= dram_megafeis_a08.o
 obj-$(CONFIG_MELE_A1000)	+= dram_sun4i_360_512.o

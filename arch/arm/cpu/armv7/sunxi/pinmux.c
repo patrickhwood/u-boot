@@ -59,6 +59,24 @@ int sunxi_gpio_get_cfgpin(u32 pin)
 	return cfg & 0xf;
 }
 
+int sunxi_gpio_set_drv(u32 pin, u32 val)
+{
+	u32 drv;
+	u32 bank = GPIO_BANK(pin);
+	u32 index = GPIO_DRV_INDEX(pin);
+	u32 offset = GPIO_DRV_OFFSET(pin);
+	struct sunxi_gpio *pio =
+	    &((struct sunxi_gpio_reg *)SUNXI_PIO_BASE)->gpio_bank[bank];
+
+	drv = readl(&pio->drv[0] + index);
+	drv &= ~(0x3 << offset);
+	drv |= val << offset;
+
+	writel(drv, &pio->drv[0] + index);
+
+	return 0;
+}
+
 int sunxi_gpio_set_pull(u32 pin, u32 val)
 {
 	u32 pull;
@@ -69,7 +87,7 @@ int sunxi_gpio_set_pull(u32 pin, u32 val)
 	    &((struct sunxi_gpio_reg *)SUNXI_PIO_BASE)->gpio_bank[bank];
 
 	pull = readl(&pio->pull[0] + index);
-	pull &= ~(0xf << offset);
+	pull &= ~(0x3 << offset);
 	pull |= val << offset;
 
 	writel(pull, &pio->pull[0] + index);

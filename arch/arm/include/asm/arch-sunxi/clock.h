@@ -104,6 +104,8 @@ struct sunxi_ccm_reg {
 	u32 mali_clk_cfg;	/* 0x154 */
 	u8 res7[0x4];
 	u32 mbus_clk_cfg;	/* 0x15c */
+	u8 res8[0x4];
+	u32 gmac_clk_cfg;	/* 0x164 */
 };
 
 /* apb1 bit field */
@@ -171,6 +173,9 @@ struct sunxi_ccm_reg {
 #define AHB_GATE_OFFSET_USB_EHCI0	1
 #define AHB_GATE_OFFSET_USB		0
 
+/* ahb clock gate bit offset (second register) */
+#define AHB_GATE_OFFSET_GMAC		17
+
 #define CCM_AHB_GATE_GPS (0x1 << 26)
 #define CCM_AHB_GATE_SDRAM (0x1 << 14)
 #define CCM_AHB_GATE_DLL (0x1 << 15)
@@ -212,13 +217,19 @@ struct sunxi_ccm_reg {
 #define CCM_MBUS_CTRL_M_X(n) ((n) - 1)
 #define CCM_MBUS_CTRL_N(n) (((n) & 0xf) << 16)
 #define CCM_MBUS_CTRL_N_MASK CCM_MBUS_CTRL_N(0xf)
-#define CCM_MBUS_CTRL_N_X(n) ((n) - 1)
+#define CCM_MBUS_CTRL_N_X(n) (((n) >> 3) ? 3 : (((n) >> 2) ? 2 : (((n) >> 1) ? 1 : 0)))
 #define CCM_MBUS_CTRL_CLK_SRC(n) (((n) & 0x3) << 24)
 #define CCM_MBUS_CTRL_CLK_SRC_MASK CCM_MBUS_CTRL_CLK_SRC(0x3)
 #define CCM_MBUS_CTRL_CLK_SRC_HOSC 0x0
 #define CCM_MBUS_CTRL_CLK_SRC_PLL6 0x1
 #define CCM_MBUS_CTRL_CLK_SRC_PLL5 0x2
 #define CCM_MBUS_CTRL_GATE (0x1 << 31)
+
+#define CCM_GMAC_CTRL_TX_CLK_SRC_MII 0x0
+#define CCM_GMAC_CTRL_TX_CLK_SRC_EXT_RGMII 0x1
+#define CCM_GMAC_CTRL_TX_CLK_SRC_INT_RGMII 0x2
+#define CCM_GMAC_CTRL_GPIT_MII (0x0 << 2)
+#define CCM_GMAC_CTRL_GPIT_RGMII (0x1 << 2)
 
 
 #ifndef __ASSEMBLY__

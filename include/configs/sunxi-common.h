@@ -430,6 +430,16 @@
 #define CONFIG_CMD_NET
 #endif
 
+#ifdef CONFIG_SUNXI_GMAC
+#define CONFIG_DESIGNWARE_ETH		/* GMAC can use designware driver */
+#define CONFIG_DW_AUTONEG
+#define CONFIG_PHY_GIGE			/* GMAC can use gigabit PHY	*/
+#define CONFIG_SYS_DCACHE_OFF		/* dw driver doesn't support dcache */
+#define CONFIG_MII			/* MII PHY management		*/
+#define CONFIG_CMD_MII
+#define CONFIG_CMD_NET
+#endif
+
 #ifdef CONFIG_CMD_NET
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP

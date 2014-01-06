@@ -29,6 +29,7 @@
 #include <common.h>
 #include <i2c.h>
 #include <netdev.h>
+#include <miiphy.h>
 #include <serial.h>
 #ifdef CONFIG_SPL_BUILD
 #include <spl.h>
@@ -111,6 +112,7 @@ void s_init(void)
 
 	watchdog_init();
 	clock_init();
+	timer_init();
 	gpio_init();
 
 #ifdef CONFIG_SPL_BUILD
@@ -134,14 +136,18 @@ void enable_caches(void)
 }
 #endif
 
-#if defined(CONFIG_SUNXI_EMAC)
+#if defined(CONFIG_SUNXI_EMAC) || defined(CONFIG_SUNXI_GMAC)
 /*
  * Initializes on-chip ethernet controllers.
  * to override, implement board_eth_init()
  */
 int cpu_eth_init(bd_t *bis)
 {
+#ifdef CONFIG_SUNXI_EMAC
 	sunxi_emac_initialize(bis);
+#else
+	sunxi_gmac_initialize(bis);
+#endif
 
 	return 0;
 }
