@@ -470,6 +470,13 @@ void main_loop(void)
 #if defined(CONFIG_UPDATE_TFTP)
 	update_tftp(0UL);
 #endif /* CONFIG_UPDATE_TFTP */
+	{
+		char buf[20];
+		if(gd->ram_size > (1<<30))
+			setenv("bootenv", "uEnv.ct");
+		else
+			setenv("bootenv", "uEnv.cb2");
+	}
 
 #ifdef CONFIG_BOOTDELAY
 	process_boot_delay();
