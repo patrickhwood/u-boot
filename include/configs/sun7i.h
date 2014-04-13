@@ -207,13 +207,14 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"console=ttyS0,115200\0" \
-	"root=/dev/nand3 rootwait\0" \
+	"root=/dev/nandc rootwait\0" \
 	"panicarg=panic=10\0" \
 	"extraargs=\0" \
 	"loglevel=8\0" \
 	"scriptaddr=0x44000000\0" \
 	"envaddr=0x43000000\0" \
 	"kerneladdr=0x48000000\0" \
+	"machid=0x000010bb\0" \
 	"setargs=setenv bootargs console=${console} root=${root}" \
 	" loglevel=${loglevel} ${panicarg} ${extraargs}\0" \
 	"kernel=uImage\0" \
